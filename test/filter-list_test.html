@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>ajax-list test</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../ajax-list.html">
+  </head>
+  <body>
+
+    <test-fixture id="BasicTestFixture">
+      <template>
+          <ajax-list 
+          ajax_url="http://www.omdbapi.com/?s=" 
+          ajax_api="&apikey=e477ed6a"></ajax-list>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('ajax-list', () => {
+
+        test('instantiating the element with default properties works', () => {
+          const element = fixture('BasicTestFixture');
+          assert.equal(element.ajax_url, 'http://www.omdbapi.com/?s=');
+          assert.equal(element.ajax_api, '&apikey=e477ed6a');
+        });
+
+
+      });
+    </script>
+
+  </body>
+</html>

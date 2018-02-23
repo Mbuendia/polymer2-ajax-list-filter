@@ -1,0 +1,98 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/iron-input/iron-input.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="filter-list.html">
+<dom-module id="ajax-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        margin: 1rem;
+        /* IMPORTANTE */
+        text-align: center;
+      }
+      .search_tool{
+        display: block;
+        background-color: #fafafa;
+        margin: 1rem;
+        padding: 1rem;
+        border: 2px solid #ccc;
+        /* IMPORTANTE */
+        text-align: center;
+      }
+      .custom {
+      --paper-tooltip-background: black;
+      --paper-tooltip-text-color: var(--paper-pink-100);
+       width: 190px;
+     }
+     .error{
+
+        background-color: var(--paper-red-100);
+     }
+    </style>
+    <div class="search_tool" id="search_tool">
+       
+          <iron-input bind-value="{{searchSTR}}">
+            <input>
+          </iron-input>
+          <paper-button raised on-click="_searchSTR">Buscar</paper-button>
+          <iron-a11y-keys keys="enter"
+                    on-keys-pressed="_searchSTR"></iron-a11y-keys>
+    </div>
+    <paper-tooltip for="search_tool" class="custom" animation-delay="200">
+       {{tooltipSeach}}
+    </paper-tooltip>
+      <iron-ajax
+      id="do-iron-ajax"
+      url="{{url}}"
+      handle-as="json"
+      on-response="_handleResponse"
+      debounce-duration="300"></iron-ajax>
+    <filter-list data="{{arr_data}}" str_searched="{{searchSTR}}"></filter-list>
+  </template>
+
+  <script>
+    class AjaxList extends Polymer.Element {
+      static get is() { return 'ajax-list'; }
+      static get properties() {
+        return {
+          arr_data: {
+            type: Array,
+            value:() => []
+          },
+          url:String,
+          searchSTR: String,
+          ajax_url: String,
+          ajax_api: String,
+          tooltipSeach:String
+        };
+      }
+
+      _searchSTR(event) {
+        console.log('please find this film!: ' + this.searchSTR);
+        this._find(this.searchSTR, this.ajax_url, this.ajax_api);
+      }
+      
+      _handleResponse(e){  
+        if(!e.detail.response.Error){
+          this.shadowRoot.querySelector('#search_tool').classList.remove('error');
+          this.set('arr_data', e.detail.response.Search);
+        
+        }else{
+          this.set('arr_data',[]);
+          this.shadowRoot.querySelector('#search_tool').classList.add('error');
+        }
+      }
+     
+      _find(str, url, apikey) {
+        this.url = `${url}${str}${apikey}`;
+        this.shadowRoot.querySelector('#do-iron-ajax').generateRequest();
+      }
+    }
+
+    window.customElements.define(AjaxList.is, AjaxList);
+  </script>
+</dom-module>

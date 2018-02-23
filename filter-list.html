@@ -1,0 +1,92 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/iron-input/iron-input.html">
+<link rel="import" href="bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="filter-item.html">
+<dom-module id="filter-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .input-search {
+        padding: 1em;
+        margin-bottom: 1em;
+
+      }
+    </style> 
+    <template is="dom-if" if="{{_checkSearchArray(data)}}">
+        <iron-input class="input-search" bind-value="{{filter_input}}">
+            Filtrar: <input placeholder="Buscar">
+         </iron-input>
+        <filter-item arraydata="{{filtered_array}}"></filter-item>
+      </template>
+  </template>
+
+  <script>
+    class FilterList extends Polymer.Element {
+      static get is() { return 'filter-list'; }
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            value: () => []
+          },
+          filtered_array: {
+            type: Array,
+            value: () => [],
+            notify: false,
+          },
+          filter_input: {
+            type: String,
+            value: '',
+            notify: false,
+          },
+          str_searched:String
+        };
+      }
+      detached() {
+        this.removeEventListener('bind-value-changed', () => {
+          console.log('eliminado');
+        })
+
+
+      }
+
+    
+      ready() {
+       this.addEventListener('bind-value-changed', this.filterItems)
+        super.ready();
+      }
+
+      filterItems() {
+
+        let arrayAux = this.data;
+        arrayAux = arrayAux.filter((el) => {
+          return this.filterObj(el)
+        })
+        this.set('filtered_array', arrayAux);
+      }
+
+      filterObj(myObject) {
+        for (let e in myObject) {
+          if (myObject.hasOwnProperty(e)) {
+            if (myObject[e].toLowerCase().indexOf(this.filter_input.toLowerCase()) > -1) {
+              return true
+            }
+          }
+        }
+      }
+      _checkSearchArray(filterArray) {
+        this.set('filtered_array', []);
+        //set del nombre de la busqueda
+        this.set('filter_input', '');
+        this.set('filter_input', this.str_searched);
+        return !!filterArray.length;
+      }
+
+    }
+
+    window.customElements.define(FilterList.is, FilterList);
+  </script>
+</dom-module>

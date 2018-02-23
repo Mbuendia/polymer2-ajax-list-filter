@@ -1,0 +1,68 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="bower_components/paper-card/paper-card.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/iron-image/iron-image.html">
+
+<dom-module id="filter-item">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+        body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      paper-card {
+        max-width: 400px;
+        margin-bottom: 10px;
+      }
+      .image-cover{
+        width:400px; 
+        height:400px;
+        position: initial;
+      }
+      
+      .cafe-light { 
+        color: var(--paper-grey-600);
+        padding-left: 1em; }
+    </style>
+ 
+    <template is="dom-repeat" items="[[arraydata]]" as="titulo">
+   
+      <paper-card heading="[[titulo.Title]]"  alt="">
+          <p class="cafe-light">[[titulo.Year]] - [[titulo.Type]]</p>
+        <div class="card-content">
+            <iron-image 
+            class="image-cover"
+            placeholder="https://dummyimage.com/400x400/e3e3e3/000000.jpg&text=Loading"
+            sizing="cover" preload fade src="[[titulo.Poster]]"></iron-image>
+           </div>
+        <div class="card-actions">
+            <paper-button class="Red"><a href="http://www.imdb.com/title/[[titulo.imdbID]]" target="_blank">imdDB</a></paper-button> 
+          </div>
+      </paper-card>
+    </template>
+
+  </template>
+
+  <script>
+    
+    class FilterItem extends Polymer.Element {
+      static get is() { return 'filter-item'; }
+      static get properties() {
+        return {
+          arraydata: {
+            type: Array,
+            value: () =>[]
+         }
+        };
+      } 
+     
+    }
+
+    window.customElements.define(FilterItem.is, FilterItem);
+  </script>
+</dom-module>
