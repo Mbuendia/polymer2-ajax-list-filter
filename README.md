@@ -1,6 +1,6 @@
-# \<filter-list\>
+# \<ajax-list\>
 
-a filter a list
+a ajax list
 
 ## Install the Polymer-CLI
 
